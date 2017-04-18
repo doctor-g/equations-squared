@@ -1,0 +1,16 @@
+<module rename-to='algebra'>
+  <inherits name='playn.PlayN'/>
+  <inherits name="tripleplay.TriplePlay"/>
+  <inherits name="com.google.common.collect.Collect"/>
+  <inherits name="playn.logging.Enhanced" />
+  <inherits name="AlgebraGameAssets" />
+  <set-configuration-property name="compiler.emulatedStack.recordLineNumbers" value="true"/>
+  <set-configuration-property name="compiler.emulatedStack.recordFileNames" value="true"/>
+
+  <source path='core'/>
+  <source path='html'/>
+
+  <public path="resources" />
+
+  <entry-point class='edu.bsu.pvgestwicki.etschallenge.html.AlgebraGameHtml'/>
+</module>

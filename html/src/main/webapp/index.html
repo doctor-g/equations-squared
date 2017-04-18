@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<link href='http://fonts.googleapis.com/css?family=Droid+Sans'
+	rel='stylesheet' type='text/css' />
+<link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono'
+	rel='stylesheet' type='text/css' />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.22.custom.min.js"></script>
+<link type="text/css"
+	href="css/custom-theme/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
+
+<script type="text/javascript" src="js/Board.js"></script>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+<script type="text/javascript">
+	$(function() {
+		// Tabs
+		$('#tabs').tabs();
+
+		//hover states on the static widgets
+		$('#dialog_link, ul#icons li').hover(function() {
+			$(this).addClass('ui-state-hover');
+		}, function() {
+			$(this).removeClass('ui-state-hover');
+		});
+	});
+</script>
+
+<script type="text/javascript">
+	// JQuery UI code for tabbed view.
+	function swapContent(content_id) {
+		tag = '#' + content_id;
+		$('#content-container').children().css('visibility', 'hidden');
+		$('#content-container').replaceWith(tag);
+		$(tag).css('visibility', 'visible');
+	}
+</script>
+
+<script type="text/javascript">
+	var plusicon = 'ui-icon-plus';
+	var minusicon = 'ui-icon-minus';
+
+	$(function() {
+		// Create all of the examples.
+		$('.example .content').each(function(index) {
+			var textWithoutNewlines = $(this).text().replace(/\n/g, "");
+			var board = eval(textWithoutNewlines);
+			$(this).replaceWith(board.node());
+		});
+
+		// Style the example sections
+		$('.example').each(function(index) {
+			$(this).addClass('ui-widget-content');
+		});
+
+		// Get uniform example heads.
+		$('.example .head')
+				.each(
+						function(index) {
+							$(this)
+									.html(
+											$('<div><span class="toggleicon">+</span> Examples</div>'));
+						});
+
+		// Make the examples collapsable.
+		$('.example .head').each(function(index) {
+			$(this).attr('title', 'Click to expand');
+			$(this).click(function() {
+				var toggle = $(this).find('.toggleicon');
+				if (toggle.text()[0] == '+')
+					toggle.text('-');
+				else
+					toggle.text('+');
+				$(this).next().toggle();
+				return false;
+			}).next().hide();
+		});
+	});
+</script>
+<title>Equations Squared</title>
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push([ '_setAccount', 'UA-11642955-12' ]);
+	_gaq.push([ '_trackPageview' ]);
+
+	(function() {
+		var ga = document.createElement('script');
+		ga.type = 'text/javascript';
+		ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl'
+				: 'http://www')
+				+ '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</head>
+<body>
+	<h1 class="ui-widget-content">
+		<span class="game-title">Equations Squared</span>
+	</h1>
+
+	<div id='playn-root'>Loading game...</div>
+	<script src="algebra/algebra.nocache.js"></script>
+
+	<div id="gap"></div>
+
+	<div id="tabs">
+		<ul>
+			<li><a href="#instructions">How to Play</a></li>
+			<li><a href="#teachers">For Educators</a></li>
+			<li><a href="#faq">FAQ</a>
+			<li><a href="#about">About</a></li>
+		</ul>
+		<div id='instructions'>
+			<ul>
+				<li><p>Click or touch a symbol to select it, then click or
+						touch the board to place it.</p></li>
+
+				<li><p>Play a straight line of symbols to create balanced
+						algebraic equations.</p>
+					<div class="example">
+						<div class="head">Example</div>
+						<ul>
+							<li>
+								<div class="content">new Board(5).horizontal(0,
+									2,'1+1=2').caption('Horizontal')</div>
+							</li>
+							<li><div class="content">new Board(5).vertical(2,
+									0,'3=4-1').caption('Vertical')</div></li>
+							<li><div class="content">new Board(5).horizontal(0,
+									2,'1+1').vertical(2,3,'=2').highlightArray(
+									[0,2,1,2,2,2,2,3,2,4] ).caption('Illegal! Tiles must be placed
+									on one axis')</div></li>
+						</ul>
+					</div></li>
+				<li><p>Every turn after your first, your new equation must
+						touch an existing one.</p>
+					<div class="example">
+						<div class="head">Example</div>
+						<ul>
+							<li><div class="content">new Board(5).horizontal(0,
+									2,'1+1=2').vertical(0,0,'4*1=1').highlightArray([0,0,0,1,0,3,0,4]).
+									caption('Added vertical equation')</div></li>
+							<li><div class="content">new Board(5).vertical(2,
+									0,'3=4-1').horizontal(0,4,'8/1=8').highlightArray([0,4,1,4,3,4,4,4]).
+									caption('Added horizontal equation')</div></li>
+							<li><div class="content">new
+									Board(5).horizontal(2,1,'5=5').vertical(1,0,'10=10').caption('You
+									can alter existing equations as long as they are still true')</div></li>
+						</ul>
+					</div></li>
+				<li><p>Symbols must always form balanced equations in a
+						line with their neighbors; you cannot have two symbols next to
+						each other that are not part of an equation.</p>
+					<div class="example">
+						<div class="head">Example</div>
+						<ul>
+							<li><div class="content">new Board(5).horizontal(0,
+									1,'5=5').horizontal(2,2,'0=0').caption('Illegal! \"50\" is not
+									an equation.')</div></li>
+						</ul>
+					</div>
+				<li><p>If you play a variable, you will have to give it a
+						value that makes the equation true.</p>
+					<div class="example">
+						<div class="head">Example</div>
+						<ul>
+							<li><div class="content">new Board(5).horizontal(0,
+									2,'A+1=2').caption('You will have to give a value to A')</div></li>
+							<li><div class="content">new Board(5).horizontal(0,
+									2,'A+1=2').vertical(0,0,'B-A=8').caption('You will have to give
+									a value to B, but A was already set')</div></li>
+							<li><div class="content">new Board(5).horizontal(0,
+									2,'3A=15').caption('You can also multiply by juxtaposition')</div></li>
+							<li><div class="content">
+									new Board(5).horizontal(0, 2,'2A=24').caption('Variables are
+									not digits! Here, <span class="math">A</span> must be <span
+										class="math">12</span>, not <span class="math">4</span>')
+								</div></li>
+						</ul>
+					</div></li>
+				<li><p>You get points for each operation, and combining
+						them into complex expressions earns a big bonus!</p>
+					<div class="example">
+						<div class="head">Example</div>
+						<ul>
+							<li><div class="content">new Board(7).horizontal(0,
+									3,'3+2*2=7').caption('Bonus points for combining
+									operations...')</div></li>
+							<li><div class="content">new Board(7).horizontal(0,
+									3,'3*2+2=8').caption('but be careful with order of
+									operations!')</div></li>
+						</ul>
+					</div></li>
+				<li><p>Addition, subtraction, multiplication, and division:
+						each is worth more points than the previous one! When you combine
+						them in the same expression, the effect is multiplicative.</p></li>
+				<li><p>Earn badges by playing interesting and complicated
+						equations, but avoid demerits for making mathematical errors.</p></li>
+				<li><p>The game is over when there are not enough digits
+						and variables left to fill up your tray. The number remaining is
+						shown below your score.</p></li>
+			</ul>
+		</div>
+
+		<div id='teachers'>
+			<p>
+				This game was designed to be usable as a math learning assessment
+				instrument as part of the <a href="http://etsgameschallenge.com/">ETS
+					Assessment Games Challenge</a>. It is structured around the <a
+					href="http://etsgameschallenge.com/details/learningprogression">Equality
+					and Variable: Equations and Expressions Model</a> learning progression.
+				There are two ways to use game results as part of a learning
+				assessment: through <em>game summary</em> and through the <em>score</em>.
+			</p>
+
+			<h3>Assessment by Game Summary</h3>
+			<p>Many of the badges and demerits earned during the game are
+				designed to correspond to the levels of the Equations and Expression
+				learning progression. The game summary screen indicates how many
+				times each badge and demerit was earned, and this should be taken
+				into account when using the game to assess a player's place in the
+				learning progression.</p>
+			<dl>
+				<dt>
+					Demerit: <span class="demerit">Not an Equation</span>
+				</dt>
+				<dd>
+					<p>
+						This demerit is earned when a player commits a sequence that does
+						not form an equation at all. The sequence would otherwise be a
+						legal move, so this demerit does not represent a misunderstanding
+						of the rules of the game, but rather the rules of mathematics. As
+						such, it corresponds to <span class="level">Level 1</span> in the
+						learning progression.
+					</p>
+				</dd>
+
+				<dt>
+					Demerit: <span class="demerit">Unbalanced Equation</span> and <span
+						class="demerit">Unbalanced Variable Equation</span>
+				</dt>
+				<dd>
+					<p>
+						These demerits are earned by playing well-formed equations that
+						are false, such as <span class="math">5=1+1</span> or <span
+							class="math">A=10</span> with <span class="math">A</span> bound
+						to anything besides <span class="math">10</span>. The difference
+						between the two demerits is simply whether the unbalanced equation
+						used variables or not. A player who earns this demerit a few times
+						may simply be making computational errors, but a player who earns
+						it consistently demonstrates <span class="level">Level 1</span> of
+						the learning progression: a fundamental misunderstanding of the
+						relationship between expressions represented by equality and, for
+						the latter demerit, variables.
+					</p>
+				</dd>
+
+				<dt>
+					Badge: <span class="badge">Variable Reuse</span>
+				</dt>
+				<dd>
+					<p>
+						This badge is earned by creating an equation that uses a variable
+						that the player had previously bound to a value. Earning this
+						badge reflects a minimum of <span class="level">Level 2</span> of
+						the learning progression; the player understands that the variable
+						can have a specific value, and that value "sticks."
+					</p>
+				<dt>
+					Badge: <span class="badge">Operators on Either Side</span>
+				</dt>
+				<dd>
+					<p>
+						This badge is earned by playing at least two non-trivial equations
+						in which a single integer value is on the left and the right. For
+						example, a student could earn this by playing <span class="math">1+1=2</span>
+						and <span class="math">4=2+2</span>. Earning this badge
+						corresponds to <span class="level">Level 3</span> of the learning
+						progression: it demonstrates an understanding that the two sides
+						of an equal sign can be exchanged&mdash; that there is not a
+						dependency on having operations on one side or the other.
+					</p>
+				</dd>
+
+				<dt>
+					Badge: <span class="badge">Operators on Both Sides</span>
+				</dt>
+				<dd>
+					<p>
+						This badge is earned by playing an equation in which operators are
+						used on both sides of an equal sign, such as <span class="math">1+1=2-0</span>.
+						It corresponds to <span class="level">Level 4</span> of the
+						learning progression, a richer understanding of equality and the
+						equivalence of the two sides of an equation, regardless of their
+						structure.
+					</p>
+				</dd>
+
+				<dt>
+					Badge: <span class="badge">Many Equals</span>
+				</dt>
+				<dd>
+					<p>
+						This badge is earned by playing an equation with more than one
+						equal sign, such as <span class="math">5=3+2=1+4</span>. It also
+						corresponds to <span class="level">Level 4</span> of the learning
+						progression, where a player is using a rich understanding of
+						equality as a relationship among expressions.
+					</p>
+				</dd>
+			</dl>
+
+			<p>
+				Other demerits included in the game may provide an educator with
+				insight into a player's weak points. For example, a player who earns
+				<span class="demerit">Divide by Zero</span> more than once likely
+				does not have a good understanding of <em>why</em> this cannot be
+				done,
+			</p>
+
+			<h3>Assessment by Score</h3>
+			<p>
+				Players' scores also provide a rough approximation of their
+				understanding of equations and expressions. Simple identity
+				equations such as <span class="math">5=5</span> are worth zero
+				points, and while punting does not incur a penalty, it does have an
+				opportunity cost. Hence, a low score probably indicates that the
+				player is not savvy with manipulating mathematical symbols into
+				valid equations. Similarly, players with high scores are likely to
+				have demonstrated significant ability with mathematical
+				manipulations. More detailed assessment requires looking at the game
+				summaries, as described above.
+			</p>
+		</div>
+
+		<div id='faq'>
+			<dl>
+				<dt>Why isn't the board showing up?</dt>
+				<dd>
+					<p>
+						The game is written to a draft specification of HTML5, and since
+						there is no definitive standard, different browsers may behave
+						differently. We've tested the game primarily using the <a
+							href="https://www.google.com/intl/en/chrome/browser/">Google
+							Chrome</a> browser, which is free and recommended for playing the
+						game. The game should be playable on <a
+							href="http://www.mozilla.org/en-US/firefox">Mozilla Firefox</a>,
+						but may not run properly on <a
+							href="http://windows.microsoft.com/en-us/internet-explorer/products/ie/home/">Microsoft
+							Internet Explorer</a>
+					</p>
+				</dd>
+
+				<dt>Is the set of symbols used the same each game?</dt>
+				<dd>
+					<p>Each game, you have the same number of digits and variables.
+						However, the set of operators is different each time. The most
+						common operation is addition, with decreasing probabilities of
+						drawing subtraction, multiplication, and division.</p>
+				</dd>
+				<dt>
+					Why are division equations such as <span class="math">3&divide;2=1</span>
+					accepted?
+				</dt>
+				<dd>
+					<p>
+						We are doing <i>integer arithmetic</i>, so division gives you the
+						answer in whole numbers, not fractions or decimals. How many <span
+							class="math">2</span>s go in <span class="math">3</span>? Only
+						one. There is a remainder of one, but that's the result of a
+						different operation&mdash;<i>modulo</i>&mdash;which is not
+						included in the game.
+					</p>
+				</dd>
+			</dl>
+		</div>
+
+		<div id='about'>
+			<p>
+				This game was designed and developed in Summer&nbsp;2012
+				by  <a
+					href="https://plus.google.com/103828843747057637757/about">Paul
+					Gestwicki</a>
+				as an entry into the 
+				<a href="http://etsgameschallenge.com/">ETS Math Assessment Game Challenge</a>,
+				specifically to align with the 
+				<a href="http://etsgameschallenge.com/details/learningprogression"><em>Equality 
+				and Variable: Equations and Expressions</em> Learning Progression</a>.
+			</p>
+			<p>
+			  Testers and friends have recommended a host of features, including a persistent high score table,
+			  additional mathematical operations, and multiplayer and campaign modes. These are great ideas,
+			  especially those that would increase both the fun and utility of the game with respect
+			  to skills assessment. I have also been looking at native support for mobile devices,
+			  which requires a bit more platform testing than I can execute at this moment.
+			  I would like to add some of these features and platform support, if there is sufficient
+			  community interest; however, as of this writing, the judging for the competition is taking place,
+			  and so I want to leave the current build alone for a few weeks. 
+			</p>
+			<p>
+				This game was created using <a
+					href="http://code.google.com/p/playn/">PlayN</a> and <a
+					href="https://github.com/threerings/tripleplay">Tripleplay</a>.
+				Thanks to the good folks at <a href="http://google.com">Google</a>
+				and <a href="http://threerings.com">Three Rings</a> as well as all
+				the other contributors.
+			</p>
+			<p>Thanks to all my alpha and beta testers!</p>
+		</div>
+	</div>
+
+</body>
+</html>

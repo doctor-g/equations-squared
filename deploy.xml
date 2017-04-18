@@ -1,0 +1,50 @@
+<!DOCTYPE project>
+<project name="WebDeployer" default="deploy-to-web-then-cleanup" basedir=".">
+	<description>
+        Pushes the war file to the web server and unpacks the files it needs from there.
+    </description>
+
+	<property name="war.file" location="html/target/algebra-html-0.2-SNAPSHOT.war" />
+	<property name="deploy.dir" location="/home/pvg/www/games/equations-squared" />
+
+	<target name="check-deploy-dir-exists">
+		<condition property="deploy-mountpoint-is-mounted">
+			<available file="${deploy.dir}" type="dir" />
+		</condition>
+		<fail unless="deploy-mountpoint-is-mounted">
+	    It appears ${deploy.dir} is not mounted.
+	  </fail>
+	</target>
+
+	<target name="build-war">
+		<exec executable="mvn">
+			<arg value="clean" />
+			<arg value="-Phtml" />
+			<arg value="package" />
+		</exec>
+	</target>
+
+	<target name="clean-deploy-dir" depends="check-deploy-dir-exists">
+		<delete includeemptydirs="true">
+			<fileset dir="${deploy.dir}" includes="**/*" />
+		</delete>
+	</target>
+
+	<target name="deploy-to-web" depends="check-deploy-dir-exists,clean-deploy-dir,build-war">
+		<unzip dest="${deploy.dir}" src="${war.file}">
+			<patternset>
+				<exclude name="WEB-INF/**" />
+				<exclude name="META-INF/**" />
+				<exclude name="algebra/hosted.html" />
+			</patternset>
+		</unzip>
+	</target>
+
+	<target name="deploy-to-web-then-cleanup" depends="deploy-to-web">
+		<exec executable="mvn">
+			<arg value="clean" />
+			<arg value="-Phtml" />
+			<arg value="clean" />
+		</exec>
+	</target>
+</project>
